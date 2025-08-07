@@ -1,0 +1,112 @@
+<header>
+  <nav class="nav">
+    <div class="logo">CoFriendly</div>
+
+    <!-- Icône Burger (visible sur mobile) -->
+    <div class="burger" id="burger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- Menu de navigation (y compris le lien Connexion/Compte) -->
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="explorer.html">Explorer</a></li>
+      <li><a href="idee.html">Idée</a></li>
+      <li><a href="apropos.html">À propos</a></li>
+      <li><a href="connexion.html" id="auth-link">Connexion</a></li>
+    </ul>
+  </nav>
+</header>
+
+
+
+  /* Reset et bases */
+/* Reset et bases */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #fff;
+  color: #e0e7ff;
+  line-height: 1.6;
+}
+
+/* Barre de navigation */
+.nav {
+  background-color: #0F172A;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+/* Icône burger */
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.burger span {
+  width: 25px;
+  height: 3px;
+  background: white;
+  border-radius: 3px;
+}
+
+/* Menu de navigation */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links li a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .burger {
+    display: flex;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: #0F172A;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    width: 200px;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+}

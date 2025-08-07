@@ -1,0 +1,13 @@
+firebase.auth().onAuthStateChanged(user => {
+  const compteLink = document.getElementById('compte-link');
+
+  if (user) {
+    // L'utilisateur est connecté
+    compteLink.textContent = 'Mon compte';
+    compteLink.href = 'mon-compte.html';  // page profil
+  } else {
+    // L'utilisateur n'est pas connecté
+    compteLink.textContent = 'Connexion';
+    compteLink.href = 'connexion.html';
+  }
+});

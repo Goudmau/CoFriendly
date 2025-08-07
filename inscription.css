@@ -1,0 +1,188 @@
+/* Reset et bases */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #0f172a;
+  color: #e0e7ff;
+  line-height: 1.6;
+}
+
+/* Barre de navigation */
+.nav {
+  background-color: #0F172A;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+/* Icône burger */
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.burger span {
+  width: 25px;
+  height: 3px;
+  background: white;
+  border-radius: 3px;
+}
+
+/* Menu de navigation */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links li a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .burger {
+    display: flex;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: #0F172A;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    width: 200px;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+}
+
+
+/* Section qui prend toute la hauteur et centre tout */
+.section {
+  display: flex;
+  justify-content: center;   /* centre horizontalement */
+  align-items: center;       /* centre verticalement */
+  height: 100vh;             /* toute la hauteur de la fenêtre */
+  background-color: #f0f0f0; /* couleur de fond douce */
+  margin: 0;
+  padding: 0;
+}
+
+/* Conteneur fixe qui entoure le formulaire */
+.carte {
+  width: 350px; /* largeur fixe */
+}
+
+/* Style du formulaire */
+#form {
+  background-color: #fff;
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Titres et labels */
+#form h1 {
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+#form label {
+  font-weight: 600;
+  color: #555;
+}
+
+/* Champs input */
+#form input {
+  padding: 10px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+#form input:focus {
+  border-color: #3b82f6; /* bleu clair au focus */
+  outline: none;
+}
+
+/* Bouton */
+#submit {
+  background-color: #3b82f6;
+  color: white;
+  font-weight: 700;
+  padding: 12px;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease;
+}
+
+#submit:hover {
+  background-color: #2563eb;
+}
+
+p {
+    color: black;
+    text-align: center;
+}
+
+#btn-google {
+  background: #f0f0f0;
+  color: black;
+  font-weight: 700;
+  padding: 12px;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease;
+}
+
+#btn-google:hover {
+  background-color: #e0e0e0;
+}
+
+#img-google {
+  height: 25px;
+  width: 25px;
+  margin-right: 8px;
+  margin-bottom: -6px;
+}
+
+

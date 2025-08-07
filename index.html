@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoFriendly</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+  <nav class="nav">
+    <div class="logo">CoFriendly</div>
+
+    <!-- Icône Burger (visible sur mobile) -->
+    <div class="burger" id="burger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <!-- Menu de navigation (y compris le lien Connexion/Compte) -->
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="explorer.html">Explorer</a></li>
+      <li><a href="idee.html">Idée</a></li>
+      <li><a href="apropos.html">À propos</a></li>
+      <li><a href="connexion.html" id="auth-link">Connexion</a></li>
+    </ul>
+  </nav>
+</header>
+
+
+
+  <main>
+    <section id="accueil" class="section accueil container">
+      <div class="accueil__content">
+        <h1 class="accueil__title">Bienvenue sur <span class="highlight">CoFriendly</span></h1>
+        <p class="accueil__subtitle">
+Crée ta carte perso en deux-deux : partage tous tes réseaux, tes passions, tes talents, et montre qui tu es vraiment, sans prise de tête ni stress.
+</p>
+<p class="accueil__subtitle">
+Que tu sois étudiant, créateur de contenu, artiste, ou juste curieux, CoFriendly te connecte avec des gens cool, des vibes positives, et des profils inspirants à découvrir. Ici, tu trouves ta place, tu rencontres des personnes qui partagent tes intérêts, et tu peux échanger librement.
+</p>
+<p class="accueil__subtitle">
+C’est simple, rapide et super chill. Viens kiffer, échanger, découvrir, et booster ta manière de te connecter au monde — tout ça dans une ambiance relax, authentique, et bienveillante. Avec CoFriendly, connecte-toi autrement, crée de vrais liens et fais partie d’une communauté qui te ressemble.
+</p>
+        <a href="explorer.html" class="btn">Explorer</a>
+      </div>
+      </section>
+      <script type="module" src="firebaseconfig.js"></script>
+      <script type="module" src="auth.js"></script>
+      <script type="module"src="script.js"></script>
+      <script type="module" src="main.js"></script>
+</body>
+</html>

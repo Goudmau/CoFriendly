@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mon Compte - CoFriendly</title>
+  <link rel="stylesheet" href="compte.css" />
+</head>
+<body>
+  <header>
+    <nav class="nav">
+      <div class="logo">CoFriendly</div>
+      <div class="burger" id="burger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="explorer.html">Explorer</a></li>
+        <li><a href="idee.html">Idée</a></li>
+        <li><a href="apropos.html">À propos</a></li>
+        <li><a href="compte.html" id="auth-link">Mon compte</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Mon compte</h1>
+
+    <section id="user-info">
+      <img src="" alt="Photo de profil" id="pdp" width="120" height="120">
+
+      <div class="info-text">
+        <p><strong>👋 Prénom :</strong> <span id="prenom"></span></p>
+        <p><strong>🧑‍💼 Nom :</strong> <span id="nom"></span></p>
+        <p><strong>🎂 Âge :</strong> <span id="age"></span></p>
+        <p><strong>🏙️ Ville :</strong> <span id="ville"></span></p>
+        <p><strong>🏫 Vas-tu à l'école :</strong> <span id="vaecole"></span></p>
+        <p><strong>🎓 École :</strong> <span id="ecole"></span></p>
+        <p><strong>📚 Niveau scolaire :</strong> <span id="niveau"></span></p>
+        <p><strong>🚀 Mes ambitions :</strong> <span id="ambition"></span></p>
+        <p><strong>🎯 Mes objectifs :</strong> <span id="objectif"></span></p>
+        <p><strong>⏰ Temps libre :</strong> <span id="tempslibre"></span></p>
+        <p><strong>💬 Description :</strong> <span id="parletoi"></span></p>
+        <p><strong>❓ Pourquoi ici :</strong> <span id="raison"></span></p>
+        <p><strong>💡 Compétences à améliorer :</strong> <span id="competence"></span></p>
+
+        <fieldset>
+          <legend>Vos réseaux sociaux</legend>
+          <div id="reseaux"></div>
+        </fieldset>
+      </div>
+    </section>
+
+    <button id="modifier">Modifier mon compte</button>
+    <button id="btn-logout">Déconnexion</button>
+  </main>
+
+  <!-- Firebase SDK compat -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+
+  <!-- Scripts -->
+  <script src="auth.js"></script>
+  <script type="module" src="firebaseconfig.js"></script>
+  <script type="module" src="compte.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
