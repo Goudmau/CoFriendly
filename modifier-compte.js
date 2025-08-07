@@ -205,4 +205,66 @@ form.addEventListener('submit', async (e) => {
     message.textContent = "Erreur lors de l'enregistrement. Vérifie la taille de ta photo.";
     message.style.color = 'red';
   }
+  // ✅ Charger les données existantes de l'utilisateur au démarrage
+auth.onAuthStateChanged(async (user) => {
+  if (!user) return;
+
+  try {
+    const docRef = doc(db, 'utilisateurs', user.uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+
+      // Pré-remplir le formulaire
+      form.prenom.value = data.prenom || '';
+      form.nom.value = data.nom || '';
+      form.age.value = data.age || '';
+      form.ville.value = data.ville || '';
+      form['ecole?'].value = data.vaALecole || '';
+      form.ecole.value = data.ecole || '';
+      form.niveau.value = data.niveau || '';
+      form.ambition.value = data.ambition || '';
+      form.tempslibre.value = data.tempslibre || '';
+      form.parletoi.value = data.parletoi || '';
+      form.raison.value = data.raison || '';
+      form.competence.value = data.competence || '';
+
+      // Objectifs
+      const objInputs = document.querySelectorAll('#objectif-container input');
+      data.objectifs?.forEach((obj, i) => {
+        if (objInputs[i]) objInputs[i].value = obj;
+      });
+
+      // Passions
+      const passInputs = document.querySelectorAll('#passion-container input');
+      data.passions?.forEach((pass, i) => {
+        if (passInputs[i]) passInputs[i].value = pass;
+      });
+
+      // Réseaux
+      if (data.reseaux) {
+        if (data.reseaux.instagram) {
+          form.instagram.value = data.reseaux.instagram.replace("https://www.instagram.com/", "");
+        }
+        if (data.reseaux.tiktok) {
+          form.tiktok.value = data.reseaux.tiktok.replace("https://www.tiktok.com/@", "");
+        }
+        if (data.reseaux.snapchat) {
+          form.snapchat.value = data.reseaux.snapchat.replace("https://snapchat.com/add/", "");
+        }
+      }
+
+      // Photo
+      if (data.photoUrl) {
+        preview.src = data.photoUrl;
+        preview.style.display = 'block';
+        photoBase64 = data.photoUrl; // garder la photo si on ne change pas
+      }
+    }
+  } catch (err) {
+    console.error("Erreur lors du chargement des données :", err);
+  }
+});
+
 });
