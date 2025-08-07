@@ -1,36 +1,37 @@
-import { auth } from "./firebaseconfig.js";
-import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+// inscription.js
+import { auth, provider } from "./firebaseconfig.js";
+import { createUserWithEmailAndPassword, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
 const form = document.getElementById("form");
+const btnGoogle = document.getElementById("btn-google");
+const message = document.querySelector(".message");
 
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
+  const email = form.email.value;
+  const password = form.password.value;
 
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      document.querySelector(".message").textContent = "Inscription réussie 🎉";
-      setTimeout(() => window.location.href = "connexion.html", 1000);
-    })
-    .catch((error) => {
-      document.querySelector(".message").textContent = "Erreur : " + error.message;
-    });
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+    message.style.color = "green";
+    message.textContent = "Inscription réussie 🎉";
+    setTimeout(() => {
+      window.location.href = "connexion.html";
+    }, 1000);
+  } catch (error) {
+    message.style.color = "red";
+    message.textContent = "Erreur : " + error.message;
+  }
 });
 
-import { signInWithPopup } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-import {provider } from "./firebaseconfig.js";
-// Ne redeclare surtout pas `auth`, utilise-le directement
-
-document.getElementById("btn-google").addEventListener("click", () => {
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      const user = result.user;
-      console.log("Inscrit avec Google :", user);
-      location.href = "explorer.html"
-    })
-    .catch((error) => {
-      console.error("Erreur Google :", error);
-    });
+btnGoogle.addEventListener("click", async (e) => {
+  e.preventDefault();
+  try {
+    await signInWithPopup(auth, provider);
+    window.location.href = "explorer.html";
+  } catch (error) {
+    console.error("Erreur Google :", error);
+    message.style.color = "red";
+    message.textContent = "Erreur lors de la connexion Google.";
+  }
 });

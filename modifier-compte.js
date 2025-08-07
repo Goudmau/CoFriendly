@@ -1,166 +1,222 @@
 import { auth, db } from './firebaseconfig.js';
-import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-// Récupération des éléments du DOM
 const form = document.getElementById('form');
 const message = document.getElementById('message');
-const previewPdp = document.getElementById('preview-pdp');
-const pdpInput = document.getElementById('pdp');
 
-// Objectifs dynamiques
-const objectifContainer = document.getElementById('objectif-container');
+const photoInput = document.getElementById('photo');
+const preview = document.getElementById('preview');
+
+let photoBase64 = ""; // pour stocker photo actuelle ou nouvelle
+
+// Création d’un input texte simple (pour objectifs et passions)
+function creerInput(placeholder) {
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = placeholder;
+  input.style.display = 'block';
+  input.style.marginBottom = '8px';
+  return input;
+}
+
+// Gestion dynamique des objectifs
 document.getElementById('add-objectif').addEventListener('click', () => {
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.placeholder = 'Nouvel objectif';
-    objectifContainer.appendChild(input);
+  const container = document.getElementById('objectif-container');
+  container.appendChild(creerInput('Nouvel objectif'));
 });
+
 document.getElementById('clear-objectif').addEventListener('click', () => {
-    objectifContainer.innerHTML = '';
+  const container = document.getElementById('objectif-container');
+  container.innerHTML = '';
 });
 
-// Passions dynamiques
-const passionContainer = document.getElementById('passion-container');
+// Gestion dynamique des passions
 document.getElementById('add-passion').addEventListener('click', () => {
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.placeholder = 'Nouvelle passion';
-    passionContainer.appendChild(input);
+  const container = document.getElementById('passion-container');
+  container.appendChild(creerInput('Nouvelle passion'));
 });
+
 document.getElementById('clear-passions').addEventListener('click', () => {
-    passionContainer.innerHTML = '';
+  const container = document.getElementById('passion-container');
+  container.innerHTML = '';
 });
 
-// Aperçu image de profil
-pdpInput.addEventListener('change', () => {
-    const file = pdpInput.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = e => {
-            previewPdp.src = e.target.result;
-            previewPdp.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-    }
-});
+// Fonction pour remplir formulaire avec données existantes
+async function remplirFormulaire(user) {
+  const userRef = doc(db, 'utilisateurs', user.uid);
+  const userSnap = await getDoc(userRef);
 
-// Soumission du formulaire
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  if (userSnap.exists()) {
+    const data = userSnap.data();
 
-    const user = auth.currentUser;
-    if (!user) {
-        message.textContent = "Erreur : utilisateur non connecté.";
-        return;
-    }
-
-    // Récupérer les données du formulaire
-    const prenom = document.getElementById('prenom').value.trim();
-    const nom = document.getElementById('nom').value.trim();
-    const age = parseInt(document.getElementById('age').value.trim());
-    const ville = document.getElementById('ville').value.trim();
-    const vaALecole = document.getElementById('ecole?').value;
-    const ecole = document.getElementById('ecole').value.trim();
-    const niveau = document.getElementById('niveau').value;
-    const ambition = document.getElementById('ambition').value.trim();
-    const tempslibre = document.getElementById('tempslibre').value.trim();
-    const parletoi = document.getElementById('parletoi').value.trim();
-    const raison = document.getElementById('raison').value.trim();
-    const competence = document.getElementById('competence').value.trim();
+    form.prenom.value = data.prenom || '';
+    form.nom.value = data.nom || '';
+    form.age.value = data.age || '';
+    form.ville.value = data.ville || '';
+    form['ecole?'].value = data.vaALecole || '';
+    form.ecole.value = data.ecole || '';
+    form.niveau.value = data.niveau || '';
+    form.ambition.value = data.ambition || '';
+    form.tempslibre.value = data.tempslibre || '';
+    form.parletoi.value = data.parletoi || '';
+    form.raison.value = data.raison || '';
+    form.competence.value = data.competence || '';
 
     // Objectifs
-    const objectifs = [];
-    objectifContainer.querySelectorAll('input').forEach(input => {
-        if (input.value.trim()) objectifs.push(input.value.trim());
-    });
+    const objectifContainer = document.getElementById('objectif-container');
+    objectifContainer.innerHTML = '';
+    if (Array.isArray(data.objectifs) && data.objectifs.length > 0) {
+      data.objectifs.forEach(obj => {
+        const input = creerInput('Objectif');
+        input.value = obj;
+        objectifContainer.appendChild(input);
+      });
+    } else {
+      objectifContainer.appendChild(creerInput('Nouvel objectif'));
+    }
 
     // Passions
-    const passions = [];
-    passionContainer.querySelectorAll('input').forEach(input => {
-        if (input.value.trim()) passions.push(input.value.trim());
-    });
+    const passionContainer = document.getElementById('passion-container');
+    passionContainer.innerHTML = '';
+    if (Array.isArray(data.passions) && data.passions.length > 0) {
+      data.passions.forEach(pas => {
+        const input = creerInput('Passion');
+        input.value = pas;
+        passionContainer.appendChild(input);
+      });
+    } else {
+      passionContainer.appendChild(creerInput('Nouvelle passion'));
+    }
 
     // Réseaux sociaux
-    const instagram = document.getElementById('instagram').value.trim();
-    const tiktok = document.getElementById('tiktok').value.trim();
-    const pseudoSnap = document.getElementById('snapchat').value.trim();
-    const snapchat = pseudoSnap ? `https://snapchat.com/add/${pseudoSnap}` : '';
-
-    // Aperçu image base64
-    const pdpFile = pdpInput.files[0];
-    let pdpBase64 = '';
-    if (pdpFile) {
-        const reader = new FileReader();
-        reader.onloadend = async () => {
-            pdpBase64 = reader.result;
-
-            // Envoi à Firestore
-            await saveToFirestore();
-        };
-        reader.readAsDataURL(pdpFile);
+    if (data.reseaux) {
+      form.instagram.value = data.reseaux.instagram || '';
+      form.tiktok.value = data.reseaux.tiktok || '';
+      if (data.reseaux.snapchat) {
+        const snapUrl = data.reseaux.snapchat;
+        const pseudo = snapUrl.split("/add/")[1] || '';
+        form.snapchat.value = pseudo;
+      }
     } else {
-        await saveToFirestore();
+      form.instagram.value = '';
+      form.tiktok.value = '';
+      form.snapchat.value = '';
     }
 
-    async function saveToFirestore() {
-        try {
-            const userRef = doc(db, 'utilisateurs', user.uid);
-            await setDoc(userRef, {
-                prenom,
-                nom,
-                age,
-                ville,
-                vaALecole,
-                ecole,
-                niveau,
-                ambition,
-                objectifs,
-                passions,
-                tempslibre,
-                parletoi,
-                raison,
-                competence,
-                reseaux: {
-                    instagram,
-                    tiktok,
-                    snapchat
-                },
-                photoProfil: pdpBase64 || null,
-                uid: user.uid
-            });
-
-            message.textContent = "Profil enregistré avec succès !";
-            message.style.color = 'green';
-            location.href = "compte.html";
-        } catch (error) {
-            console.error("Erreur lors de l’enregistrement :", error);
-            message.textContent = "Erreur lors de l’enregistrement.";
-            message.style.color = 'red';
-        }
-    }
-    onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const userDocRef = doc(db, "users", user.uid);
-    const userDocSnap = await getDoc(userDocRef);
-
-    if (userDocSnap.exists()) {
-      const data = userDocSnap.data();
-
-      // Tu mets les valeurs dans les champs du formulaire
-      document.getElementById("prenom").value = data.prenom || "";
-      document.getElementById("nom").value = data.nom || "";
-      document.getElementById("age").value = data.age || "";
-      document.getElementById("ecole").value = data.ecole || "";
-      document.getElementById("passions").value = data.passions || "";
-      document.getElementById("objectifs").value = data.objectifs || "";
-      document.getElementById("reseaux").value = data.reseaux || "";
-      document.getElementById("photoPreview").src = data.photoURL || "";
+    // Photo
+    if (data.photoUrl && data.photoUrl.trim() !== '') {
+      photoBase64 = data.photoUrl;
+      preview.src = photoBase64;
+      preview.style.display = 'block';
     } else {
-      console.log("Aucune donnée trouvée pour cet utilisateur.");
+      preview.style.display = 'none';
     }
   } else {
-    console.log("Utilisateur non connecté");
+    console.log('Pas de données dans Firestore pour cet utilisateur.');
+  }
+}
+
+// Quand utilisateur connecté, remplir formulaire
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    remplirFormulaire(user);
+  } else {
+    message.textContent = 'Tu dois être connecté pour modifier ton profil.';
   }
 });
 
+// Si utilisateur change photo, lire en base64
+photoInput.addEventListener('change', () => {
+  const file = photoInput.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    photoBase64 = reader.result;
+    preview.src = photoBase64;
+    preview.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+});
+
+// Soumission du formulaire : enregistrement dans Firestore
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const user = auth.currentUser;
+  if (!user) {
+    message.textContent = "Erreur : utilisateur non connecté.";
+    return;
+  }
+
+  const prenom = form.prenom.value.trim();
+  const nom = form.nom.value.trim();
+  const age = parseInt(form.age.value.trim());
+  const ville = form.ville.value.trim();
+  const vaALecole = form['ecole?'].value;
+  const ecole = form.ecole.value.trim();
+  const niveau = form.niveau.value;
+  const ambition = form.ambition.value.trim();
+  const tempslibre = form.tempslibre.value.trim();
+  const parletoi = form.parletoi.value.trim();
+  const raison = form.raison.value.trim();
+  const competence = form.competence.value.trim();
+
+  // Objectifs valides
+  const objectifs = [];
+  document.getElementById('objectif-container').querySelectorAll('input').forEach(input => {
+    if (input.value.trim()) objectifs.push(input.value.trim());
+  });
+
+  // Passions valides
+  const passions = [];
+  document.getElementById('passion-container').querySelectorAll('input').forEach(input => {
+    if (input.value.trim()) passions.push(input.value.trim());
+  });
+
+  const pseudoInstagram = form.instagram.value.trim();
+  const pseudoTiktok = form.tiktok.value.trim();
+  const pseudoSnap = form.snapchat.value.trim();
+  const snapchat = pseudoSnap ? `https://snapchat.com/add/${pseudoSnap}` : '';
+  const tiktok = pseudoSnap ? `https://www.tiktok.com/@${pseudoTiktok}` : '';
+  const instagram = pseudoSnap ? `https://www.instagram.com/${pseudoInstagram}` : '';
+
+  try {
+    await setDoc(doc(db, 'utilisateurs', user.uid), {
+      prenom,
+      nom,
+      age,
+      ville,
+      vaALecole,
+      ecole,
+      niveau,
+      ambition,
+      objectifs,
+      passions,
+      tempslibre,
+      parletoi,
+      raison,
+      competence,
+      reseaux: {
+        instagram,
+        tiktok,
+        snapchat
+      },
+      photoUrl: photoBase64 || '',
+      uid: user.uid
+    });
+
+    message.textContent = "Profil enregistré avec succès !";
+    message.style.color = 'green';
+
+    setTimeout(() => {
+      location.href = "compte.html";
+    }, 1500);
+
+  } catch (error) {
+    console.error("Erreur lors de l'enregistrement :", error);
+    message.textContent = "Erreur lors de l'enregistrement.";
+    message.style.color = 'red';
+  }
 });

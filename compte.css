@@ -1,3 +1,4 @@
+/* Reset global */
 * {
   margin: 0;
   padding: 0;
@@ -20,8 +21,25 @@ body {
   padding: 20px;
 }
 
+/* Container principal */
+.container {
+  background-color: #fff;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  border-radius: 15px;
+  padding: 40px 30px;
+  max-width: 450px;
+  width: 100%;
+  margin-top: 80px; /* espace pour nav fixe */
+  text-align: left;
+  color: #334155;
+}
+
 h1 {
   text-align: center;
+  margin-bottom: 30px;
+  font-weight: 700;
+  font-size: 2rem;
+  color: #1a1a1a;
 }
 
 /* Barre de navigation */
@@ -33,9 +51,7 @@ h1 {
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   z-index: 100;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
@@ -96,82 +112,7 @@ h1 {
   }
 }
 
-.container {
-  background-color: #fff;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-  border-radius: 15px;
-  padding: 40px 30px;
-  max-width: 450px;
-  width: 100%;
-  margin-top: 80px; /* espace pour nav fixe */
-  text-align: left;
-  color: #334155;
-}
-
-/* Titre */
-.container h1 {
-  margin-bottom: 30px;
-  font-weight: 700;
-  font-size: 2rem;
-  color: #1a1a1a;
-}
-
-#user-info img#pdp {
-  grid-column: 1 / 3;
-  margin: 0 auto;
-  justify-self: center;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  margin-bottom: 25px;
-  object-fit: cover;
-}
-
-/* Boutons */
-#modifier, #btn-logout {
-  cursor: pointer;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  padding: 15px 30px;
-  font-size: 1.1rem;
-  margin: 10px 10px 0 0;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  min-width: 140px;
-  color: white;
-  display: inline-block;
-}
-
-#modifier {
-  background-color: #28a745;
-}
-
-#modifier:hover {
-  background-color: #218838;
-  box-shadow: 0 6px 12px rgba(33, 136, 56, 0.6);
-}
-
-#btn-logout {
-  background-color: #dc3545;
-}
-
-#btn-logout:hover {
-  background-color: #c82333;
-  box-shadow: 0 6px 12px rgba(200, 35, 51, 0.6);
-}
-
-#user-info img#pdp {
-  margin: 0 auto;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  .container {
-    padding: 30px 20px;
-    margin-top: 70px;
-  }
-
+/* Section utilisateur avec grille */
 #user-info {
   background-color: #fefefe;
   border-radius: 15px;
@@ -184,39 +125,56 @@ h1 {
   color: #334155;
 }
 
+/* Photo profil */
+#user-info {
+  background-color: #fefefe;
+  border-radius: 15px;
+  padding: 25px 30px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #334155;
+  text-align: center; /* Centre aussi le texte sous la photo */
+  gap: 20px;
+}
+
 #user-info img#pdp {
-  grid-column: 1 / 2;
   width: 120px;
   height: 120px;
   border-radius: 50%;
   border: 4px solid #FACC15;
   object-fit: cover;
+  margin-bottom: 15px;
 }
 
-#user-info div.info-text {
-  grid-column: 2 / 3;
+.info-text {
   display: flex;
   flex-direction: column;
   gap: 12px;
   font-size: 1.05rem;
+  text-align: left;
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
 }
 
-/* Chaque info avec emoji + label + valeur */
-#user-info div.info-text p {
+.info-text p {
   margin: 0;
   line-height: 1.4;
   font-weight: 600;
   color: #475569;
 }
 
-#user-info div.info-text p span.label {
+.info-text p strong {
   font-weight: 700;
   color: #1e293b;
   margin-right: 8px;
 }
 
+
 /* Réseaux sociaux */
-#user-info div.info-text p.reseaux a {
+#reseaux a {
   display: inline-block;
   margin-right: 12px;
   text-decoration: none;
@@ -228,20 +186,60 @@ h1 {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-#user-info div.info-text p.reseaux a:hover {
+#reseaux a:hover {
   background-color: #eab308;
   color: white;
 }
 
-#user-info div.info-text p strong {
-  font-weight: 700;
-  color: #1e293b;
-  margin-right: 8px;
+/* Boutons modifier et déconnexion */
+/* Conteneur des boutons, si tu en as un */
+.buttons-container {
+  display: flex;
+  flex-direction: column; /* empile verticalement */
+  align-items: center;    /* centre horizontalement */
+  gap: 15px;              /* espace entre les boutons */
+  margin-top: 20px;
+}
+
+#modifier, #btn-logout {
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#modifier {
+  background-color: #28a745;
+}
+
+#modifier:hover {
+  background-color: #218838;
+  box-shadow: 0 6px 12px rgba(33,136,56,0.6);
+}
+
+#btn-logout {
+  background-color: #dc3545;
+}
+
+#btn-logout:hover {
+  background-color: #c82333;
+  box-shadow: 0 6px 12px rgba(200,35,51,0.6);
 }
 
 
-/* Responsive */
+
+/* Responsive : petit écran */
 @media (max-width: 600px) {
+  .container {
+    padding: 30px 20px;
+    margin-top: 70px;
+  }
+
   #user-info {
     grid-template-columns: 1fr;
     padding: 20px;
@@ -253,12 +251,9 @@ h1 {
     grid-column: 1 / -1;
   }
 
-  #user-info div.info-text {
+  .info-text {
     grid-column: 1 / -1;
   }
-}
-
-
 
   #modifier, #btn-logout {
     width: 100%;
@@ -266,6 +261,7 @@ h1 {
   }
 }
 
+/* Fieldset réseaux sociaux */
 fieldset {
   border: 2px solid #00796b;
   border-radius: 12px;

@@ -1,54 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion</title>
-    <link rel="stylesheet" href="connexion.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Connexion - CoFriendly</title>
+  <link rel="stylesheet" href="connexion.css" />
 </head>
 <body>
-    <header>
-  <nav class="nav">
-    <div class="logo">CoFriendly</div>
+  <header>
+    <nav class="nav">
+      <div class="logo">CoFriendly</div>
+      <div class="burger" id="burger">
+        <span></span><span></span><span></span>
+      </div>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="explorer.html">Explorer</a></li>
+        <li><a href="idee.html">Idée</a></li>
+        <li><a href="apropos.html">À propos</a></li>
+        <li><a href="compte.html" id="auth-link">Mon compte</a></li>
+      </ul>
+    </nav>
+  </header>
 
-    <!-- Icône Burger (visible sur mobile) -->
-    <div class="burger" id="burger">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-
-    <!-- Menu de navigation (y compris le lien Connexion/Compte) -->
-    <ul class="nav-links" id="nav-links">
-      <li><a href="index.html">Accueil</a></li>
-      <li><a href="explorer.html">Explorer</a></li>
-      <li><a href="idee.html">Idée</a></li>
-      <li><a href="apropos.html">À propos</a></li>
-      <li><a href="connexion.html" id="auth-link">Connexion</a></li>
-    </ul>
-  </nav>
-</header>
-
-
-
+  <main>
     <section class="section">
-        <div class="carte">
-            <form id="form">
-                <h1>Connexion</h1>
-                <label for="email">Entrez votre email</label>
-                <input type="email" name="email" id="email">
-                <label for="password">Entrez votre mot de passe</label>
-                <input type="text" name="password" id="password">
-                <button type="submit" id="submit">Se connecter</button>
-                <button id="btn-google"><img src="./img/logo-google-removebg-preview.png" alt="logo google" id="img-google">Se connecter avec google</button>
-                <a href="mdp.html">Mot de passe oublié?</a>
-                <p>Pas de compte? <a href="inscription.html">S'inscrire</a></p>
-            <p class="message"></p>
-            </form>
-        </div>
+      <div class="carte">
+        <form id="form">
+          <h1>Connexion</h1>
+          <label for="email">Entrez votre email</label>
+          <input type="email" name="email" id="email" required />
+          <label for="password">Entrez votre mot de passe</label>
+          <input type="password" name="password" id="password" required />
+          <button type="submit" id="submit">Se connecter</button>
+
+          <button id="btn-google">
+          <img src="img/logo-google.png" alt="logo google" id="img-google" />
+          Se connecter avec Google
+        </button>
+
+        <p>Pas encore inscrit ? <a href="inscription.html">Inscription</a></p>
+        <p class="message" style="color:red;"></p>
+        </form>
+
+      </div>
     </section>
-    <script type="module" src="main.js"></script>
-    <script type="module" src="firebaseconfig.js"></script>
-    <script type="module" src="connexion.js"></script>
+  </main>
+
+  <script type="module" src="connexion.js"></script>
 </body>
 </html>

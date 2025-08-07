@@ -1,36 +1,36 @@
-import { auth } from "./firebaseconfig.js";
-import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+import { auth, provider } from "./firebaseconfig.js";
+import { signInWithEmailAndPassword, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-const form = document.getElementById("form");
+const loginForm = document.getElementById('form');
+const googleBtn = document.getElementById('btn-google');
+const errorMessage = document.querySelector('.message');  // <--- ici on cible la classe .message
 
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
+if (loginForm) {
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = loginForm.email.value;
+    const password = loginForm.password.value;
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      window.location.href = "compte.html";
+    } catch (error) {
+      errorMessage.textContent = "Erreur de connexion : " + error.message;
+    }
+  });
+} else {
+  console.warn("Formulaire de connexion introuvable !");
+}
 
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      document.querySelector(".message").textContent = "Connexion réussie ! ✅";
-      setTimeout(() => window.location.href = "explorer.html", 1000);
-    })
-    .catch((error) => {
-      document.querySelector(".message").textContent = "Erreur : " + error.message;
-    });
-});
-
-import { signInWithPopup } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-import {provider } from "./firebaseconfig.js";
-// Ne redeclare surtout pas `auth`, utilise-le directement
-
-document.getElementById("btn-google").addEventListener("click", () => {
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      const user = result.user;
-      console.log("Connecté avec Google :", user);
-      location.href = "explorer.html"
-    })
-    .catch((error) => {
-      console.error("Erreur Google :", error);
-    });
-});
+if (googleBtn) {
+  googleBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    try {
+      await signInWithPopup(auth, provider);
+      window.location.href = "compte.html";
+    } catch (error) {
+      errorMessage.textContent = "Erreur Google : " + error.message;
+    }
+  });
+} else {
+  console.warn("Bouton Google introuvable !");
+}

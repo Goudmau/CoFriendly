@@ -1,158 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="modifier-compte.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modifier mon compte - CoFriendly</title>
+  <link rel="stylesheet" href="modifier-compte.css" />
 </head>
 <body>
-    <header>
-  <nav class="nav">
-    <div class="logo">CoFriendly</div>
-
-    <!-- Icône Burger (visible sur mobile) -->
-    <div class="burger" id="burger">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-
-    <!-- Menu de navigation (y compris le lien Connexion/Compte) -->
-    <ul class="nav-links" id="nav-links">
-      <li><a href="index.html">Accueil</a></li>
-      <li><a href="explorer.html">Explorer</a></li>
-      <li><a href="idee.html">Idée</a></li>
-      <li><a href="apropos.html">À propos</a></li>
-      <li><a href="compte.html" id="auth-link">Mon compte</a></li>
-    </ul>
-  </nav>
-</header>
-
-
+  <header>
+    <nav class="nav">
+      <div class="logo">CoFriendly</div>
+      <div class="burger" id="burger">
+        <span></span><span></span><span></span>
+      </div>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="explorer.html">Explorer</a></li>
+        <li><a href="idee.html">Idée</a></li>
+        <li><a href="apropos.html">À propos</a></li>
+        <li><a href="compte.html" id="auth-link">Mon compte</a></li>
+      </ul>
+    </nav>
+  </header>
 
   <main>
     <div class="form-div">
-        <form id="form">
-  <h1>Modifier son compte</h1>
+      <form id="form">
+        <!-- Ton formulaire complet ici (prénom, nom, etc.) -->
+        <!-- ... copie complète de ton form existant ... -->
+        <h1>Modifier son compte</h1>
 
-  <!-- Infos personnelles -->
-  <label for="prenom">Entrez votre prénom</label>
-  <input type="text" name="prenom" id="prenom" required>
+        <label for="prenom">Entrez votre prénom</label>
+        <input type="text" name="prenom" id="prenom" required>
 
-  <label for="nom">Entrez votre nom de famille</label>
-  <input type="text" name="nom" id="nom" required>
+        <label for="nom">Entrez votre nom de famille</label>
+        <input type="text" name="nom" id="nom" required>
 
-  <label for="age">Entrez votre âge</label>
-  <input type="number" name="age" id="age" min="1" max="120">
+        <label for="age">Entrez votre âge</label>
+        <input type="number" name="age" id="age" min="1" max="120">
 
-  <label for="ville">Entrez votre ville</label>
-  <input type="text" name="ville" id="ville">
+        <label for="ville">Entrez votre ville</label>
+        <input type="text" name="ville" id="ville">
 
-  <label for="ecole?">Vas-tu à l'école?</label>
-  <select name="ecole?" id="ecole?">
-    <option value="" disabled selected></option>
-    <option value="Oui">Oui (tu peux répondre aux 2 prochaines questions)</option>
-    <option value="Non">Non (Ne répond pas aux prochaine questions)</option>
-  </select>
+        <label for="ecole?">Vas-tu à l'école?</label>
+        <select name="ecole?" id="ecole?">
+          <option value="" disabled selected></option>
+          <option value="Oui">Oui (tu peux répondre aux 2 prochaines questions)</option>
+          <option value="Non">Non (Ne répond pas aux prochaine questions)</option>
+        </select>
 
-  <label for="ecole">Entrez votre école</label>
-  <input type="text" name="ecole" id="ecole">
+        <label for="ecole">Entrez votre école</label>
+        <input type="text" name="ecole" id="ecole">
 
-  <label for="niveau">Entrez votre niveau</label>
-<select name="niveau" id="niveau">
-  <option value="" disabled selected>Choisissez votre niveau</option>
-  <option value="Secondaire 1">Secondaire 1</option>
-  <option value="Secondaire 2">Secondaire 2</option>
-  <option value="Secondaire 3">Secondaire 3</option>
-  <option value="Secondaire 4">Secondaire 4</option>
-  <option value="Secondaire 5">Secondaire 5</option>
-  <option value="autre">Autre</option>
-</select>
+        <label for="niveau">Entrez votre niveau</label>
+        <select name="niveau" id="niveau">
+          <option value="" disabled selected>Choisissez votre niveau</option>
+          <option value="Secondaire 1">Secondaire 1</option>
+          <option value="Secondaire 2">Secondaire 2</option>
+          <option value="Secondaire 3">Secondaire 3</option>
+          <option value="Secondaire 4">Secondaire 4</option>
+          <option value="Secondaire 5">Secondaire 5</option>
+          <option value="autre">Autre</option>
+        </select>
 
-  <label for="ambition">Quelle est ta plus grande ambition personnelle ?</label>
-  <textarea name="ambition" id="ambition" rows="3" placeholder="Ex: Devenir riche, etc."></textarea>
+        <label for="ambition">Quelle est ta plus grande ambition personnelle ?</label>
+        <textarea name="ambition" id="ambition" rows="3" placeholder="Ex: Devenir riche, etc."></textarea>
 
-  <!-- Objectifs -->
-  <fieldset>
-    <legend>Quels sont tes objectifs de cette année ?</legend>
-    <div id="objectif-container">
-      <!-- Objectifs ajoutés apparaîtront ici -->
-    </div>
-    <div class="objectif-buttons">
-      <button type="button" id="add-objectif">+ Ajouter un objectif</button>
-      <button type="button" id="clear-objectif">🗑️ Supprimer tous les objectifs</button>
-    </div>
-  </fieldset>
+        <fieldset>
+          <legend>Quels sont tes objectifs de cette année ?</legend>
+          <div id="objectif-container"></div>
+          <div class="objectif-buttons">
+            <button type="button" id="add-objectif">+ Ajouter un objectif</button>
+            <button type="button" id="clear-objectif">🗑️ Supprimer tous les objectifs</button>
+          </div>
+        </fieldset>
 
-  <!-- Passions -->
-  <fieldset>
-    <legend>Passions</legend>
-    <div id="passion-container">
-      <!-- Passions ajoutées apparaîtront ici -->
-    </div>
-    <div class="passion-buttons">
-      <button type="button" id="add-passion">+ Ajouter une passion</button>
-      <button type="button" id="clear-passions">🗑️ Supprimer toutes les passions</button>
-    </div>
-  </fieldset>
+        <fieldset>
+          <legend>Passions</legend>
+          <div id="passion-container"></div>
+          <div class="passion-buttons">
+            <button type="button" id="add-passion">+ Ajouter une passion</button>
+            <button type="button" id="clear-passions">🗑️ Supprimer toutes les passions</button>
+          </div>
+        </fieldset>
 
-  <!-- Temps libre -->
-  <label for="tempslibre">Qu’aimes-tu faire pendant ton temps libre ?</label>
-  <textarea name="tempslibre" id="tempslibre" rows="3" placeholder="Ex: Voir tes amis, apprendre, lire..."></textarea>
+        <label for="tempslibre">Qu’aimes-tu faire pendant ton temps libre ?</label>
+        <textarea name="tempslibre" id="tempslibre" rows="3" placeholder="Ex: Voir tes amis, apprendre, lire..."></textarea>
 
-  <label for="parletoi">Parle-nous de toi</label>
-  <textarea name="parletoi" id="parletoi" rows="3" placeholder="Ex: Je suis quelqu'un de heureux et je cherche des amis."></textarea>
+        <label for="parletoi">Parle-nous de toi</label>
+        <textarea name="parletoi" id="parletoi" rows="3" placeholder="Ex: Je suis quelqu'un de heureux et je cherche des amis."></textarea>
 
-  <label for="raison">Pour quelle raison tu as rejoint le site</label>
-  <textarea name="raison" id="raison" placeholder="Ex : pour découvrir des gens, etc."></textarea>
+        <label for="raison">Pour quelle raison tu as rejoint le site</label>
+        <textarea name="raison" id="raison" placeholder="Ex : pour découvrir des gens, etc."></textarea>
 
-  <!-- Compétence à développer -->
-  <label for="competence">Quelle compétence aimerais-tu développer ?</label>
-  <input type="text" name="competence" id="competence" placeholder="Ex: Avoir des meilleurs notes">
+        <label for="competence">Quelle compétence aimerais-tu développer ?</label>
+        <input type="text" name="competence" id="competence" placeholder="Ex: Avoir des meilleurs notes">
 
-  <!-- Photo de profil -->
-  <label for="photo">Photo de profil :</label>
-<input type="file" id="photo" accept="image/*">
-<img id="preview" src="" alt="Aperçu de la photo" style="max-width: 150px; display: none; margin-top: 10px;">
+        <label for="photo">Photo de profil :</label>
+        <input type="file" id="photo" accept="image/*">
+        <img id="preview" src="" alt="Aperçu de la photo" style="max-width: 150px; display: none; margin-top: 10px;">
 
-  <!-- Réseaux sociaux -->
-  <fieldset>
-    <legend>Vos réseaux sociaux</legend>
+        <fieldset>
+          <legend>Vos réseaux sociaux</legend>
 
-    <label for="instagram" class="social-label">
-      <img src="./img/logo-insta.jpg" alt="logo insta" id="logo-reseau">
-      Instagram
-    </label>
-    <input type="url" name="instagram" id="instagram" placeholder="https://instagram.com/votreprofil">
+          <label for="instagram" class="social-label">
+            <img src="./img/logo-insta.jpg" alt="logo insta" id="logo-reseau">
+            Instagram
+          </label>
+          <input type="text" name="instagram" id="instagram" placeholder="Rentre uniquement ton nom d'utilisateur">
 
-    <label for="tiktok" class="social-label">
-      <img src="./img/logo-tiktok.png" alt="logo tiktok" id="logo-reseau">
-      TikTok
-    </label>
-    <input type="url" name="tiktok" id="tiktok" placeholder="https://tiktok.com/@votreprofil">
+          <label for="tiktok" class="social-label">
+            <img src="./img/logo-tiktok.png" alt="logo tiktok" id="logo-reseau">
+            TikTok
+          </label>
+          <input type="text" name="tiktok" id="tiktok" placeholder="Rentre uniquement ton nom d'utilisateur">
 
-    <label for="snapchat" class="social-label">
-      <img src="./img/logo-snap.jpg" alt="logo snap" id="logo-reseau">
-      Snapchat
-    </label>
-    <input type="url" name="snapchat" id="snapchat" placeholder="https://snapchat.com/add/votreprofil">
-  </fieldset>
+          <label for="snapchat" class="social-label">
+            <img src="./img/logo-snap.jpg" alt="logo snap" id="logo-reseau">
+            Snapchat
+          </label>
+          <input type="text" name="snapchat" id="snapchat" placeholder="Rentre uniquement ton nom d'utilisateur">
+        </fieldset>
 
-  <button type="submit">Enregistrer</button>
-  <p id="message"></p>
-</form>
-
+        <button type="submit">Enregistrer</button>
+        <p id="message"></p>
+      </form>
     </div>
   </main>
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-
-<!-- Ton code JS (PAS en type="module") -->
-<script src="auth.js"></script>
-<script type="module" src="firebaseconfig.js"></script>
-<script type="module" src="modifier-compte.js"></script>
-<script src="main.js"></script>
+  <script type="module" src="modifier-compte.js"></script>
 </body>
 </html>
