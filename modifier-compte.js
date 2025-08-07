@@ -1,146 +1,128 @@
-import { auth, db } from './firebaseconfig.js';
-import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+// ---- Traitement et compression d'une image pour mobile ----
 
-const form = document.getElementById('form');
-const message = document.getElementById('message');
+// paramètres : modifie si tu veux
+const MAX_WIDTH = 800;
+const MAX_HEIGHT = 800;
+const MAX_KO = 900;      // taille max souhaitée en Ko
+const START_QUALITY = 0.9;
+const MIN_QUALITY = 0.4;
+const QUALITY_STEP = 0.05;
 
-const photoInput = document.getElementById('photo');
-const preview = document.getElementById('preview');
-
-let photoBase64 = ""; // pour stocker photo actuelle ou nouvelle
-
-// Création d’un input texte simple (pour objectifs et passions)
-function creerInput(placeholder) {
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.placeholder = placeholder;
-  input.style.display = 'block';
-  input.style.marginBottom = '8px';
-  return input;
+// utilitaire : lit un fichier en DataURL
+function fileToDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("Erreur lecture fichier"));
+    reader.onload = () => resolve(reader.result);
+    reader.readAsDataURL(file);
+  });
 }
 
-// Gestion dynamique des objectifs
-document.getElementById('add-objectif').addEventListener('click', () => {
-  const container = document.getElementById('objectif-container');
-  container.appendChild(creerInput('Nouvel objectif'));
-});
-
-document.getElementById('clear-objectif').addEventListener('click', () => {
-  const container = document.getElementById('objectif-container');
-  container.innerHTML = '';
-});
-
-// Gestion dynamique des passions
-document.getElementById('add-passion').addEventListener('click', () => {
-  const container = document.getElementById('passion-container');
-  container.appendChild(creerInput('Nouvelle passion'));
-});
-
-document.getElementById('clear-passions').addEventListener('click', () => {
-  const container = document.getElementById('passion-container');
-  container.innerHTML = '';
-});
-
-// Fonction pour remplir formulaire avec données existantes
-async function remplirFormulaire(user) {
-  const userRef = doc(db, 'utilisateurs', user.uid);
-  const userSnap = await getDoc(userRef);
-
-  if (userSnap.exists()) {
-    const data = userSnap.data();
-
-    form.prenom.value = data.prenom || '';
-    form.nom.value = data.nom || '';
-    form.age.value = data.age || '';
-    form.ville.value = data.ville || '';
-    form['ecole?'].value = data.vaALecole || '';
-    form.ecole.value = data.ecole || '';
-    form.niveau.value = data.niveau || '';
-    form.ambition.value = data.ambition || '';
-    form.tempslibre.value = data.tempslibre || '';
-    form.parletoi.value = data.parletoi || '';
-    form.raison.value = data.raison || '';
-    form.competence.value = data.competence || '';
-
-    // Objectifs
-    const objectifContainer = document.getElementById('objectif-container');
-    objectifContainer.innerHTML = '';
-    if (Array.isArray(data.objectifs) && data.objectifs.length > 0) {
-      data.objectifs.forEach(obj => {
-        const input = creerInput('Objectif');
-        input.value = obj;
-        objectifContainer.appendChild(input);
-      });
-    } else {
-      objectifContainer.appendChild(creerInput('Nouvel objectif'));
-    }
-
-    // Passions
-    const passionContainer = document.getElementById('passion-container');
-    passionContainer.innerHTML = '';
-    if (Array.isArray(data.passions) && data.passions.length > 0) {
-      data.passions.forEach(pas => {
-        const input = creerInput('Passion');
-        input.value = pas;
-        passionContainer.appendChild(input);
-      });
-    } else {
-      passionContainer.appendChild(creerInput('Nouvelle passion'));
-    }
-
-    // Réseaux sociaux
-    if (data.reseaux) {
-      form.instagram.value = data.reseaux.instagram || '';
-      form.tiktok.value = data.reseaux.tiktok || '';
-      if (data.reseaux.snapchat) {
-        const snapUrl = data.reseaux.snapchat;
-        const pseudo = snapUrl.split("/add/")[1] || '';
-        form.snapchat.value = pseudo;
-      }
-    } else {
-      form.instagram.value = '';
-      form.tiktok.value = '';
-      form.snapchat.value = '';
-    }
-
-    // Photo
-    if (data.photoUrl && data.photoUrl.trim() !== '') {
-      photoBase64 = data.photoUrl;
-      preview.src = photoBase64;
-      preview.style.display = 'block';
-    } else {
-      preview.style.display = 'none';
-    }
-  } else {
-    console.log('Pas de données dans Firestore pour cet utilisateur.');
-  }
+// utilitaire : calcule la taille approximative en Ko d'un base64
+function base64SizeKo(base64) {
+  return (base64.length * 3 / 4) / 1024;
 }
 
-// Quand utilisateur connecté, remplir formulaire
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    remplirFormulaire(user);
-  } else {
-    message.textContent = 'Tu dois être connecté pour modifier ton profil.';
+// fonction qui redimensionne / compresse et retourne un dataURL
+async function processImageFile(file) {
+  // vérifier que c'est bien une image et pas un HEIC (HEIC souvent pose problème)
+  if (!file.type || !file.type.startsWith("image/")) {
+    throw new Error("Le fichier n'est pas une image valide.");
   }
-});
+  // Certains iPhone exportent en image/heic ou image/heif -> navigateur peut ne pas lire
+  if (file.type.includes("heic") || file.type.includes("heif")) {
+    throw new Error("Format HEIC non supporté par le navigateur. Convertis en JPG/PNG.");
+  }
 
-// Si utilisateur change photo, lire en base64
-photoInput.addEventListener('change', () => {
+  // Si le fichier est déjà petit (< max), on peut essayer d'utiliser directement mais on convertira quand même pour standardiser
+  const dataUrl = await fileToDataURL(file);
+
+  // créer une image pour obtenir dimensions
+  const img = await new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onerror = () => reject(new Error("Erreur chargement image"));
+    image.onload = () => resolve(image);
+    image.src = dataUrl;
+  });
+
+  // calcul nouvelle taille en conservant ratio
+  let width = img.width;
+  let height = img.height;
+  if (width > height) {
+    if (width > MAX_WIDTH) {
+      height = Math.round(height * (MAX_WIDTH / width));
+      width = MAX_WIDTH;
+    }
+  } else {
+    if (height > MAX_HEIGHT) {
+      width = Math.round(width * (MAX_HEIGHT / height));
+      height = MAX_HEIGHT;
+    }
+  }
+
+  // dessiner sur canvas
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, width, height);
+
+  // essayer plusieurs qualités jusqu'à atteindre la limite
+  let quality = START_QUALITY;
+  let outputDataUrl = canvas.toDataURL('image/jpeg', quality);
+  let tailleKo = base64SizeKo(outputDataUrl);
+
+  while (tailleKo > MAX_KO && quality >= MIN_QUALITY) {
+    quality = Math.max(MIN_QUALITY, quality - QUALITY_STEP);
+    outputDataUrl = canvas.toDataURL('image/jpeg', quality);
+    tailleKo = base64SizeKo(outputDataUrl);
+    console.log(`Compression -> quality=${quality.toFixed(2)}, taille=${tailleKo.toFixed(1)}Ko`);
+    // petite sécurité pour éviter boucle inf
+    if (quality <= MIN_QUALITY) break;
+  }
+
+  // si malgré tout c'est trop gros, on échoue proprement
+  if (tailleKo > MAX_KO) {
+    throw new Error(`Image trop lourde après compression (${Math.round(tailleKo)}Ko). Choisis une image plus petite.`);
+  }
+
+  return outputDataUrl;
+}
+
+// Gestion du change du input (remplace ton ancien listener)
+photoInput.addEventListener('change', async () => {
   const file = photoInput.files[0];
   if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = () => {
-    photoBase64 = reader.result;
+  console.log("Fichier choisi :", file.name, file.type, file.size, "bytes");
+
+  try {
+    // limiter taille brute avant tout (exclusion rapide)
+    if (file.size > 15 * 1024 * 1024) { // > 15Mo improbable à gérer
+      alert("Fichier trop gros (>15 Mo). Choisis une image plus petite.");
+      photoInput.value = '';
+      return;
+    }
+
+    // traitement + compression
+    const processedBase64 = await processImageFile(file);
+
+    // debug
+    console.log("Image traitée, taille finale Ko:", base64SizeKo(processedBase64).toFixed(1));
+
+    // assigner globalement pour l'enregistrement
+    photoBase64 = processedBase64;
     preview.src = photoBase64;
     preview.style.display = 'block';
-  };
-  reader.readAsDataURL(file);
+  } catch (err) {
+    console.error("Erreur lors du traitement de l'image :", err);
+    alert("Erreur image : " + (err.message || "Impossible de traiter l'image."));
+    photoInput.value = ''; // reset
+    preview.style.display = 'none';
+  }
 });
 
-// Soumission du formulaire : enregistrement dans Firestore
+// Soumission du formulaire : on vérifie que photoBase64 est prête (remplace ton submit)
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -150,6 +132,7 @@ form.addEventListener('submit', async (e) => {
     return;
   }
 
+  // récupérer valeurs du formulaire (comme avant)
   const prenom = form.prenom.value.trim();
   const nom = form.nom.value.trim();
   const age = parseInt(form.age.value.trim());
@@ -163,27 +146,28 @@ form.addEventListener('submit', async (e) => {
   const raison = form.raison.value.trim();
   const competence = form.competence.value.trim();
 
-  // Objectifs valides
   const objectifs = [];
   document.getElementById('objectif-container').querySelectorAll('input').forEach(input => {
     if (input.value.trim()) objectifs.push(input.value.trim());
   });
 
-  // Passions valides
   const passions = [];
   document.getElementById('passion-container').querySelectorAll('input').forEach(input => {
     if (input.value.trim()) passions.push(input.value.trim());
   });
 
-const pseudoInstagram = form.instagram.value.trim();
-const pseudoTiktok = form.tiktok.value.trim();
-const pseudoSnap = form.snapchat.value.trim();
+  const pseudoInstagram = form.instagram.value.trim();
+  const pseudoTiktok = form.tiktok.value.trim();
+  const pseudoSnap = form.snapchat.value.trim();
 
-const instagram = pseudoInstagram ? `https://www.instagram.com/${pseudoInstagram}` : '';
-const tiktok = pseudoTiktok ? `https://www.tiktok.com/@${pseudoTiktok}` : '';
-const snapchat = pseudoSnap ? `https://snapchat.com/add/${pseudoSnap}` : '';
+  const instagram = pseudoInstagram ? `https://www.instagram.com/${pseudoInstagram}` : '';
+  const tiktok = pseudoTiktok ? `https://www.tiktok.com/@${pseudoTiktok}` : '';
+  const snapchat = pseudoSnap ? `https://snapchat.com/add/${pseudoSnap}` : '';
 
-
+  // IMPORTANT : s'assurer que photoBase64 est défini si une image a été choisie
+  // (photoBase64 est set dans le change event; si l'utilisateur vient de choisir une image
+  // et que le traitement est encore en cours, il faudrait attendre, mais notre change utilise await,
+  // donc photoBase64 doit être prêt ici)
   try {
     await setDoc(doc(db, 'utilisateurs', user.uid), {
       prenom,
@@ -218,7 +202,7 @@ const snapchat = pseudoSnap ? `https://snapchat.com/add/${pseudoSnap}` : '';
 
   } catch (error) {
     console.error("Erreur lors de l'enregistrement :", error);
-    message.textContent = "Erreur lors de l'enregistrement.";
+    message.textContent = "Erreur lors de l'enregistrement. Vérifie la taille de ta photo.";
     message.style.color = 'red';
   }
 });
