@@ -64,9 +64,9 @@ onAuthStateChanged(auth, async (user) => {
     reseauxDiv.innerHTML = "";
 
     const logos = {
-      instagram: 'img/logo-insta.jpg',
-      tiktok: 'img/logo-tiktok.png',
-      snapchat: 'img/logo-snap.jpg'
+      instagram: 'logo-insta.jpg',
+      tiktok: 'logo-tiktok.png',
+      snapchat: 'logo-snap.jpg'
     };
 
     if (data.reseaux) {
