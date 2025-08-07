@@ -175,12 +175,14 @@ form.addEventListener('submit', async (e) => {
     if (input.value.trim()) passions.push(input.value.trim());
   });
 
-  const pseudoInstagram = form.instagram.value.trim();
-  const pseudoTiktok = form.tiktok.value.trim();
-  const pseudoSnap = form.snapchat.value.trim();
-  const snapchat = pseudoSnap ? `https://snapchat.com/add/${pseudoSnap}` : '';
-  const tiktok = pseudoSnap ? `https://www.tiktok.com/@${pseudoTiktok}` : '';
-  const instagram = pseudoSnap ? `https://www.instagram.com/${pseudoInstagram}` : '';
+const pseudoInstagram = form.instagram.value.trim();
+const pseudoTiktok = form.tiktok.value.trim();
+const pseudoSnap = form.snapchat.value.trim();
+
+const instagram = pseudoInstagram ? `https://www.instagram.com/${pseudoInstagram}` : '';
+const tiktok = pseudoTiktok ? `https://www.tiktok.com/@${pseudoTiktok}` : '';
+const snapchat = pseudoSnap ? `https://snapchat.com/add/${pseudoSnap}` : '';
+
 
   try {
     await setDoc(doc(db, 'utilisateurs', user.uid), {
