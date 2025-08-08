@@ -11,9 +11,7 @@
     <nav class="nav">
       <div class="logo">CoFriendly</div>
       <div class="burger" id="burger">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
       </div>
       <ul class="nav-links" id="nav-links">
         <li><a href="index.html">Accueil</a></li>
@@ -37,37 +35,28 @@
         <p><strong>🎂 Âge :</strong> <span id="age"></span></p>
         <p><strong>🏙️ Ville :</strong> <span id="ville"></span></p>
         <p><strong>🏫 Vas-tu à l'école :</strong> <span id="vaecole"></span></p>
-        <p><strong>🎓 École :</strong> <span id="ecole"></span></p>
-        <p><strong>📚 Niveau scolaire :</strong> <span id="niveau"></span></p>
-        <p><strong>🚀 Mes ambitions :</strong> <span id="ambition"></span></p>
-        <p><strong>🎯 Mes objectifs :</strong> <span id="objectif"></span></p>
-        <p><strong>⏰ Temps libre :</strong> <span id="tempslibre"></span></p>
-        <p><strong>💬 Description :</strong> <span id="parletoi"></span></p>
-        <p><strong>❓ Pourquoi ici :</strong> <span id="raison"></span></p>
-        <p><strong>💡 Compétences à améliorer :</strong> <span id="competence"></span></p>
-
-        <fieldset>
-          <legend>Vos réseaux sociaux</legend>
-          <div id="reseaux"></div>
-        </fieldset>
+        <p><strong>🏢 École :</strong> <span id="ecole"></span></p>
+        <p><strong>📚 Niveau :</strong> <span id="niveau"></span></p>
+        <p><strong>🌟 Ambition :</strong> <span id="ambition"></span></p>
+        <p><strong>🎯 Objectifs :</strong> <ul id="objectifs"></ul></p>
+        <p><strong>🔥 Passions :</strong> <ul id="passions"></ul></p>
+        <p><strong>🕰️ Temps libre :</strong> <span id="tempslibre"></span></p>
+        <p><strong>🗣️ Parle de toi :</strong> <span id="parletoi"></span></p>
+        <p><strong>❓ Raison d'inscription :</strong> <span id="raison"></span></p>
+        <p><strong>🛠️ Compétence à développer :</strong> <span id="competence"></span></p>
+        <p><strong>📱 Réseaux sociaux :</strong></p>
+        <ul id="reseaux">
+          <li><a href="#" id="instagram" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+          <li><a href="#" id="tiktok" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+          <li><a href="#" id="snapchat" target="_blank" rel="noopener noreferrer">Snapchat</a></li>
+        </ul>
       </div>
     </section>
 
-<div class="buttons-container">
-  <button id="modifier">Modifier mon compte</button>
-  <button id="btn-logout">Déconnexion</button>
-</div>
-
-
+    <button id="btn-modifier">Modifier mon compte</button>
+    <button id="btn-logout">Déconnexion</button>
   </main>
 
-  <!-- Firebase SDK compat -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-
-  <!-- Scripts -->
-  <script type="module" src="firebaseconfig.js"></script>
   <script type="module" src="compte.js"></script>
-  <script type="module" src="main.js"></script>
 </body>
 </html>

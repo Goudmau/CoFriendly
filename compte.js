@@ -1,100 +1,118 @@
 import { auth, db } from "./firebaseconfig.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-const modifierBtn = document.getElementById("modifier");
-const logoutBtn = document.getElementById("btn-logout");
+const prenomSpan = document.getElementById('prenom');
+const nomSpan = document.getElementById('nom');
+const ageSpan = document.getElementById('age');
+const villeSpan = document.getElementById('ville');
+const vaecoleSpan = document.getElementById('vaecole');
+const ecoleSpan = document.getElementById('ecole');
+const niveauSpan = document.getElementById('niveau');
+const ambitionSpan = document.getElementById('ambition');
+const objectifsUl = document.getElementById('objectifs');
+const passionsUl = document.getElementById('passions');
+const tempslibreSpan = document.getElementById('tempslibre');
+const parletoiSpan = document.getElementById('parletoi');
+const raisonSpan = document.getElementById('raison');
+const competenceSpan = document.getElementById('competence');
+const pdpImg = document.getElementById('pdp');
 
-modifierBtn.addEventListener("click", () => {
+const instagramLink = document.getElementById('instagram');
+const tiktokLink = document.getElementById('tiktok');
+const snapchatLink = document.getElementById('snapchat');
+
+const btnModifier = document.getElementById('btn-modifier');
+const btnLogout = document.getElementById('btn-logout');
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const userRef = doc(db, 'utilisateurs', user.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      const data = userSnap.data();
+
+      prenomSpan.textContent = data.prenom || '';
+      nomSpan.textContent = data.nom || '';
+      ageSpan.textContent = data.age || '';
+      villeSpan.textContent = data.ville || '';
+      vaecoleSpan.textContent = data.vaALecole || '';
+      ecoleSpan.textContent = data.ecole || '';
+      niveauSpan.textContent = data.niveau || '';
+      ambitionSpan.textContent = data.ambition || '';
+      tempslibreSpan.textContent = data.tempslibre || '';
+      parletoiSpan.textContent = data.parletoi || '';
+      raisonSpan.textContent = data.raison || '';
+      competenceSpan.textContent = data.competence || '';
+
+      // Objectifs
+      objectifsUl.innerHTML = '';
+      if (Array.isArray(data.objectifs)) {
+        data.objectifs.forEach(obj => {
+          const li = document.createElement('li');
+          li.textContent = obj;
+          objectifsUl.appendChild(li);
+        });
+      }
+
+      // Passions
+      passionsUl.innerHTML = '';
+      if (Array.isArray(data.passions)) {
+        data.passions.forEach(pas => {
+          const li = document.createElement('li');
+          li.textContent = pas;
+          passionsUl.appendChild(li);
+        });
+      }
+
+      // Photo de profil
+      if (data.photoUrl && data.photoUrl.trim() !== '') {
+        pdpImg.src = data.photoUrl;
+      } else {
+        pdpImg.src = "default-avatar.png"; // avatar par défaut si tu veux
+      }
+
+      // Réseaux sociaux
+      if (data.reseaux) {
+        if (data.reseaux.instagram) {
+          instagramLink.href = data.reseaux.instagram;
+          instagramLink.style.display = "inline";
+          instagramLink.textContent = "Instagram";
+        } else {
+          instagramLink.style.display = "none";
+        }
+        if (data.reseaux.tiktok) {
+          tiktokLink.href = data.reseaux.tiktok;
+          tiktokLink.style.display = "inline";
+          tiktokLink.textContent = "TikTok";
+        } else {
+          tiktokLink.style.display = "none";
+        }
+        if (data.reseaux.snapchat) {
+          snapchatLink.href = data.reseaux.snapchat;
+          snapchatLink.style.display = "inline";
+          snapchatLink.textContent = "Snapchat";
+        } else {
+          snapchatLink.style.display = "none";
+        }
+      }
+    }
+  } else {
+    // Redirige si non connecté
+    window.location.href = "connexion.html";
+  }
+});
+
+btnModifier.addEventListener('click', () => {
   window.location.href = "modifier-compte.html";
 });
 
-logoutBtn.addEventListener("click", () => {
-  signOut(auth)
-    .then(() => {
-      window.location.href = "connexion.html";
-    })
-    .catch((error) => {
-      console.error("Erreur de déconnexion :", error);
-      alert("Erreur lors de la déconnexion");
-    });
-});
-
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = "connexion.html";
-    return;
-  }
-
+btnLogout.addEventListener('click', async () => {
   try {
-    const userDoc = await getDoc(doc(db, "utilisateurs", user.uid));
-    if (!userDoc.exists()) {
-      alert("Aucune donnée trouvée pour cet utilisateur.");
-      return;
-    }
-
-    const data = userDoc.data();
-
-    const pdp = document.getElementById('pdp');
-
-    // Affichage de la photo (base64 ou URL)
-    if (data.photoUrl && data.photoUrl.trim() !== '') {
-      pdp.src = data.photoUrl;
-    } else {
-      pdp.src = 'img/default.jpg';
-    }
-    pdp.style.display = 'block';
-
-    document.getElementById('prenom').textContent = data.prenom || '';
-    document.getElementById('nom').textContent = data.nom || '';
-    document.getElementById('age').textContent = data.age || '';
-    document.getElementById('ville').textContent = data.ville || '';
-    document.getElementById('vaecole').textContent = data.vaALecole || '';
-    document.getElementById('ecole').textContent = data.ecole || '';
-    document.getElementById('niveau').textContent = data.niveau || '';
-    document.getElementById('ambition').textContent = data.ambition || '';
-    document.getElementById('objectif').textContent = (data.objectifs || []).join(", ");
-    document.getElementById('tempslibre').textContent = data.tempslibre || '';
-    document.getElementById('parletoi').textContent = data.parletoi || '';
-    document.getElementById('raison').textContent = data.raison || '';
-    document.getElementById('competence').textContent = data.competence || '';
-
-    // Réseaux sociaux
-    const reseauxDiv = document.getElementById('reseaux');
-    reseauxDiv.innerHTML = "";
-
-    const logos = {
-      instagram: 'logo-insta.jpg',
-      tiktok: 'logo-tiktok.png',
-      snapchat: 'logo-snap.jpg'
-    };
-
-    if (data.reseaux) {
-      for (const [nom, lien] of Object.entries(data.reseaux)) {
-        if (lien) {
-          const label = document.createElement('label');
-          label.className = 'social-label';
-
-          const img = document.createElement('img');
-          img.src = logos[nom] || '';
-          img.alt = `logo ${nom}`;
-          img.className = 'logo-reseau';
-
-          const a = document.createElement('a');
-          a.href = lien;
-          a.target = "_blank";
-          a.textContent = nom.charAt(0).toUpperCase() + nom.slice(1);
-
-          label.appendChild(img);
-          label.appendChild(a);
-          reseauxDiv.appendChild(label);
-        }
-      }
-    } else {
-      reseauxDiv.textContent = "Aucun réseau social renseigné.";
-    }
+    await signOut(auth);
+    window.location.href = "index.html";
   } catch (error) {
-    console.error("Erreur récupération données :", error);
-    alert("Erreur lors de la récupération des données.");
+    alert("Erreur lors de la déconnexion : " + error.message);
   }
 });
