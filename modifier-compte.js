@@ -141,8 +141,8 @@ photoInput.addEventListener('change', () => {
 });
 
 // Soumission du formulaire : enregistrement dans Firestore
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
+form.addEventListener('submit', async (event) => {
+  event.preventDefault(); // ✅ Empêche le rechargement de la page
 
   const user = auth.currentUser;
   if (!user) {
